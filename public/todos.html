@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todos</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+
+        async function checkAuthentication() {
+            try {
+                const response = await axios.get('/me'); // Check if user is logged in
+                getTodos();
+                // If the request is successful, the user is logged in
+            } catch (error) {
+                // Redirect to signin if not authenticated
+                window.location.href = 'signin.html';
+            }
+        }
+
+
+        async function getTodos() {
+
+            try {
+                const response = await axios.get('/all-todos');
+                const todos = response.data.todos;
+                const todosContainer = document.getElementById('todos');
+                todosContainer.innerHTML = '';
+
+                todos.forEach(todo => {
+                    const todoItem = document.createElement('div');
+                    todoItem.setAttribute('id', todo.id);
+                    todoItem.innerHTML = `
+                        <span>${todo.task} - ${todo.completed ? 'Done' : 'Pending'}</span>
+                        <button onclick="updateTodo('${todo.id}')">Update</button>
+                        <button onclick="deleteTodo('${todo.id}')">Delete</button>
+                    `;
+                    todosContainer.appendChild(todoItem);
+                });
+            } catch (error) {
+                alert('Failed to fetch todos');
+            }
+        }
+
+        async function createTodo() {
+            const task = document.getElementById('new-task').value;
+            if (!task) {
+                alert('Task cannot be empty');
+                return;
+            }
+
+            try {
+                await axios.post('/create-todos', { task }, { headers: { 'Content-Type': 'application/json' } });
+                document.getElementById('new-task').value = '';
+                getTodos();
+            } catch (error) {
+                alert('Failed to create todo');
+            }
+        }
+
+        async function updateTodo(id) {
+            console.log(`Updating todo with id: ${id}`);
+            try {
+                await axios.patch(`/update-todos/${id}`);
+                getTodos();
+            } catch (error) {
+                alert('Failed to update todo');
+            }
+        }
+
+        async function deleteTodo(id) {
+            console.log(`Deleting todo with id: ${id}`);
+            try {
+                await axios.delete(`/delete-todos/${id}`);
+                getTodos();
+            } catch (error) {
+                alert('Failed to delete todo');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', checkAuthentication);
+    </script>
+</head>
+
+<body>
+    <h1>Todos</h1>
+    <a href="profile.html">Profile</a>
+
+    <!-- Form to create a new todo -->
+    <div>
+        <input type="text" id="new-task" placeholder="Enter a new task">
+        <button onclick="createTodo()">Create Todo</button>
+    </div>
+
+    <!-- Display all todos -->
+    <div id="todos"></div>
+</body>
+
+</html>

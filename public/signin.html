@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signin</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        async function checkAuthentication() {
+            try {
+                const response = await axios.get('/me'); // Check if user is logged in
+                window.location.href = 'profile.html';
+                // If the request is successful, the user is logged in
+            } catch (error) {
+                // Redirect to signin if not authenticated
+                // window.location.href = 'signin.html';
+            }
+        }
+        async function signin() {
+            const username = document.querySelector('input[name="username"]').value;
+            const password = document.querySelector('input[name="password"]').value;
+
+            try {
+                const response = await axios.post('/signin', { username, password });
+                // alert(response.data.message);
+                if (response.data.token) {
+                    // set the token in the local storage
+                    localStorage.setItem('token', response.data.token);
+                    console.log("LOCAL STORAGE: ", localStorage.getItem('token'));
+
+                    // set the token in the session storage
+                    sessionStorage.setItem('token', response.data.token);
+                    console.log("SESSION STORAGE: ", sessionStorage.getItem('token'));
+
+                    // redirect to the profile page
+                    window.location.href = 'profile.html';
+                }
+
+            } catch (error) {
+                alert(error.response.data.message);
+            }
+        }
+
+        // Call the function when the page loads
+        document.addEventListener('DOMContentLoaded', checkAuthentication);
+    </script>
+</head>
+
+<body>
+    <div>
+        <h2>Signin</h2>
+        <input type="text" name="username" placeholder="Username">
+        <input type="password" name="password" placeholder="Password">
+        <button onclick="signin()">Sign In</button>
+        <a href="signup.html">Signup</a>
+    </div>
+</body>
+
+</html>

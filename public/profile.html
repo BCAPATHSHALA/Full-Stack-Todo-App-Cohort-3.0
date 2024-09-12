@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+
+        // Create an instance of Axios with a default authorization header
+        const axiosInstance = axios.create({
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token') || sessionStorage.getItem('token')}`
+            }
+        });
+
+        async function checkAuthentication() {
+            // Check if user is authenticated
+            try {
+                const response = await axiosInstance.get('/me');
+                getUserProfile();
+                // If the request is successful, the user is logged in
+            } catch (error) {
+                // Redirect to signin if not authenticated
+                window.location.href = 'signin.html';
+            }
+        }
+
+
+        // Fetch user details and display the profile
+        async function getUserProfile() {
+            try {
+                const response = await axiosInstance.get('/me'); // Fetch user profile
+                const { username, todos } = response.data;
+
+                // Display username
+                document.getElementById('username').textContent = `Username: ${username}`;
+
+                // Display todos
+                const todosContainer = document.getElementById('todos');
+                todosContainer.innerHTML = ''; // Clear previous todos
+                todos.forEach(todo => {
+                    const todoItem = document.createElement('li');
+                    todoItem.textContent = `${todo.task} - ${todo.completed ? 'Done' : 'Pending'}`;
+                    todosContainer.appendChild(todoItem);
+                });
+            } catch (error) {
+                alert('Failed to load profile');
+            }
+        }
+
+        // Logout function
+        async function logout() {
+            try {
+                await axiosInstance.post('/signout');
+                // Remove token from local storage
+                localStorage.removeItem('token');
+
+                // Remove token from session storage
+                sessionStorage.removeItem('token');
+
+                // Remove token from Axios instance header
+                delete axiosInstance.defaults.headers.common['Authorization'];
+
+                // Redirect to home page
+                window.location.href = '/';
+            } catch (error) {
+                alert('Failed to logout');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', checkAuthentication);
+    </script>
+</head>
+
+<body>
+    <h1>Profile Page</h1>
+    <a href="todos.html">Todos</a>
+
+    <!-- Display the username -->
+    <div>
+        <h2 id="username">Loading...</h2>
+    </div>
+
+    <!-- Display the user's todos -->
+    <div>
+        <h3>Your Todos</h3>
+        <ul id="todos"></ul>
+    </div>
+
+    <!-- Logout button -->
+    <button onclick="logout()">Logout</button>
+</body>
+
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            min-height: 100vh;
+            background-color: #ffffff;
+        }
+
+        nav {
+            height: 10vh;
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 1rem;
+            text-transform: uppercase;
+            border: 1px solid gray;
+            padding: 5px;
+            border-radius: 10px;
+        }
+
+        nav a:hover {
+            color: #ccc;
+        }
+
+        main {
+            width: 100%;
+            min-height: 90vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        main div {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        main div div {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        main div div a {
+            text-decoration: none;
+            color: #000;
+            border: 1px solid gray;
+            padding: 5px;
+            border-radius: 10px;
+            font-size: 2rem;
+        }
+
+        main div div a:hover {
+            color: #333;
+        }
+
+        main .responsive-image {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            border: 5px solid gray;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <a href="signup.html">Signup</a>
+        <a href="signin.html">Signin</a>
+    </nav>
+    <main>
+        <div>
+            <h1>Full Stack Todo App</h1>
+            <p>Cohort Assignment - Week 6</p>
+            <div>
+                <a href="profile.html">Profile</a>
+                <a href="todos.html">Todos</a>
+            </div>
+
+            <h2>I am learning from this assignment - How to play with COOKIE, SESSION, LOCAL STORAGE, AND REQ HEADERS</h2>
+
+            <img class="responsive-image" src="./images/COOKIE, SESSION, LOCAL STORAGE, AND REQ HEADERS.png"
+                alt="COOKIE, SESSION, LOCAL STORAGE, AND REQ HEADERS">
+        </div>
+    </main>
+</body>
+
+</html>

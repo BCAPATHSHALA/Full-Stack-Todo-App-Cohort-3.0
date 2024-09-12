@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        async function checkAuthentication() {
+            try {
+                const response = await axios.get('/me'); // Check if user is logged in
+                window.location.href = 'profile.html';
+                // If the request is successful, the user is logged in
+            } catch (error) {
+                // Redirect to signup if not authenticated
+                // window.location.href = 'signup.html';
+            }
+        }
+        async function signup() {
+            const username = document.querySelector('input[name="username"]').value;
+            const password = document.querySelector('input[name="password"]').value;
+
+            try {
+                const response = await axios.post('/signup', { username, password });
+                alert(response.data.message);
+                window.location.href = 'signin.html';
+            } catch (error) {
+                alert(error.response.data.message);
+            }
+        }
+
+
+        document.addEventListener('DOMContentLoaded', checkAuthentication);
+    </script>
+</head>
+
+<body>
+    <div>
+        <h2>Signup</h2>
+        <input type="text" name="username" placeholder="Username">
+        <input type="password" name="password" placeholder="Password">
+        <button onclick="signup()">Sign Up</button>
+        <a href="signin.html">Signin</a>
+    </div>
+</body>
+
+</html>
